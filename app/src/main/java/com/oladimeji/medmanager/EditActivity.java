@@ -105,47 +105,29 @@ public class EditActivity extends AppCompatActivity  implements LoaderManager.Lo
         mEnddateEditText.setOnTouchListener(mTouchListener);
 
         //perform click event on edit text
-        mStartdateEditText.setOnClickListener(new View.OnClickListener() {
+        View.OnClickListener onClickListener = new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //calender class instance to get current date, month and year
-                final Calendar c = Calendar.getInstance();
-                int mYear = c.get(Calendar.YEAR);  // year selected
-                int mMonth = c.get(Calendar.MONTH); // month selected
-                int mDay = c.get(Calendar.DAY_OF_MONTH); //day selected
-                //date picker dialog
-                 datePickerDialog = new DatePickerDialog(EditActivity.this, new DatePickerDialog.OnDateSetListener() {
-                     @Override
-                     public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
+                    //calender class instance to get current date, month and year
+                    final Calendar c = Calendar.getInstance();
+                    int mYear = c.get(Calendar.YEAR);  // year selected
+                    int mMonth = c.get(Calendar.MONTH); // month selected
+                    int mDay = c.get(Calendar.DAY_OF_MONTH); //day selected
+                    //date picker dialog
+                    datePickerDialog = new DatePickerDialog(EditActivity.this, new DatePickerDialog.OnDateSetListener() {
+                        @Override
+                        public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
                             //set day of month, month and year value in the edit text
-                         mStartdateEditText.setText((month + 1) + "/" + dayOfMonth + "/" + year);
-                         mStartdateEditText.setFocusable(false);
-                     }
-                 }, mYear, mMonth, mDay);
-        datePickerDialog.show();
+                            mStartdateEditText.setText((month + 1) + "/" + dayOfMonth + "/" + year);
+                            mStartdateEditText.setFocusable(false);
+                        }
+                    }, mYear, mMonth, mDay);
+                    datePickerDialog.show();
             }
-        });
+        };
+        mStartdateEditText.setOnClickListener(onClickListener);
 
-        mEnddateEditText.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                //calender class instance to get current date, month and year
-                final Calendar c = Calendar.getInstance();
-                int mYear = c.get(Calendar.YEAR);  // year selected
-                int mMonth = c.get(Calendar.MONTH); // month selected
-                int mDay = c.get(Calendar.DAY_OF_MONTH); //day selected
-                //date picker dialog
-                datePickerDialog = new DatePickerDialog(EditActivity.this, new DatePickerDialog.OnDateSetListener() {
-                    @Override
-                    public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
-                        //set day of month, month and year value in the edit text
-                        mEnddateEditText.setText((month + 1) + "/" + dayOfMonth + "/" + year);
-                        mEnddateEditText.setFocusable(false);
-                    }
-                }, mYear, mMonth, mDay);
-                datePickerDialog.show();
-            }
-        });
+        mEnddateEditText.setOnClickListener(onClickListener);
     }
 
     private void saveMed(){
