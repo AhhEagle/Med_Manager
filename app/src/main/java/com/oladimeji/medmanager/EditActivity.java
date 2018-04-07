@@ -125,6 +125,7 @@ public class EditActivity extends AppCompatActivity  implements LoaderManager.Lo
                     datePickerDialog.show();
             }
         };
+        //on click listener for start and end date selection
         mStartdateEditText.setOnClickListener(onClickListener);
 
         mEnddateEditText.setOnClickListener(onClickListener);
