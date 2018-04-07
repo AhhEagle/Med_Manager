@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="utf-8"?><!-- Layout for the editor -->
+<ScrollView android:layout_height="match_parent" android:layout_width="match_parent"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context="com.oladimeji.medmanager.EditActivity">
+<LinearLayout
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="@dimen/activity_margin"
+    >
+
+    <!-- Name text -->
+    <TextView
+        style="@style/CategoryStyle"
+        android:text="@string/category_name" />
+
+
+    <!-- Name field -->
+    <EditText
+        android:id="@+id/edit_med_name"
+        style="@style/EditorFieldStyle"
+        android:hint="@string/hint_med_name"
+        android:inputType="textCapWords" />
+
+
+
+    <!-- Description text -->
+    <TextView
+        style="@style/CategoryStyle"
+        android:text="@string/category_description" />
+
+
+    <!-- Description field -->
+
+    <EditText
+        android:id="@+id/edit_med_description"
+        style="@style/EditorFieldStyle"
+        android:hint="@string/hint_med_description"
+        android:inputType="number" />
+
+
+
+    <TextView
+        style="@style/CategoryStyle"
+        android:text="@string/category_frequency" />
+
+    <LinearLayout
+        android:id="@+id/container_frequency"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <RelativeLayout
+            android:layout_height="wrap_content"
+            android:layout_width="0dp"
+            android:layout_weight="2"
+            android:paddingLeft="4dp">
+
+            <!-- Weight field -->
+            <EditText
+                android:id="@+id/edit_med_frequency"
+                android:hint="@string/hint_med_frequency"
+                android:inputType="number"
+                style="@style/EditorFieldStyle" />
+
+            <TextView
+                android:id="@+id/label_weight_units"
+                style="@style/EditorUnitsStyle"
+                android:layout_alignBaseline="@+id/edit_med_frequency"
+                android:layout_alignBottom="@+id/edit_med_frequency"
+                android:layout_alignParentEnd="true"
+                android:text="@string/unit_med_frequency" />
+        </RelativeLayout>
+
+    </LinearLayout>
+
+    <TextView
+        style="@style/CategoryStyle"
+        android:text="@string/category_start_date" />
+    <EditText
+        android:id="@+id/edit_start_date"
+        style="@style/EditorFieldStyle"
+        android:hint="@string/hint_med_start_date" />
+    <TextView
+        style="@style/CategoryStyle"
+        android:text="@string/category_end_date" />
+    <EditText
+        android:id="@+id/edit_end_date"
+        style="@style/EditorFieldStyle"
+        android:hint="@string/hint_med_end_date" />
+
+</LinearLayout>
+</ScrollView>

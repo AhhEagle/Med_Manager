@@ -1,0 +1,44 @@
+<resources>
+    <!-- Name of the application -->
+    <string name="app_name">MedManager</string>
+    <!-- title text for empty view -->
+    <string name="empty_view_title_text">HEALTH IS WEALTH</string>
+    <!-- subtitle text for the empty view-->
+    <string name="empty_view_subtitle_text">Lets manage your pill..Add a pill......</string>
+    <string name="category_name">NAME</string>
+    <string name="hint_med_name">DRUG NAME</string>
+    <string name="category_description">DESCRIPTION</string>
+    <string name="hint_med_description">2 pills</string>
+    <string name="edit_activity_title_new_med">ADD NEW PILLS</string>
+    <string name="editor_activity_title_new_med">ADD NEW PILLS</string>
+    <string name="edit_activity_title_edit_med">Edit A Pill</string>
+    <string name="category_frequency">FREQUENCY</string>
+    <string name="category_start_date">START DATE</string>
+    <string name="hint_med_start_date">Pick start date</string>
+    <string name="category_end_date">END DATE</string>
+    <string name="hint_med_end_date">Pick end date</string>
+    <string name="hint_med_frequency">1</string>
+    <string name="unit_med_frequency">hrs</string>
+    <string name="action_save">SAVE</string>
+    <string name="action_delete">Delete</string>
+    <string name="action_sign_out">Sign Out</string>
+    <string name="action_search">Search</string>
+    <string name="edit_insert_pill_failed">Unable to save Pill</string>
+    <string name="edit_insert_pill_successful">Pill Saved</string>
+    <string name="edit_update_pet_failed">Error updating the pill</string>
+    <string name="edit_update_pet_successful">Pill Successfully updated</string>
+    <string name="unsaved_changes_dialog_msg">Changes Will be discard and quit editing?</string>
+    <string name="discard">Discard</string>
+    <string name="keep_editing">Keep Editing</string>
+    <string name="delete_dialog_msg">Delete this Pill?</string>
+    <string name="delete">Delete!</string>
+    <string name="cancel">Cancel</string>
+    <string name="edit_delete_med_failed">Unable  to Delete Pill</string>
+    <string name="edit_delete_med_successful">Successfully Deleted</string>
+    <!-- Label for the overflow menu option for profile-->
+    <string name="action_profile">Profile</string>
+    <!-- Notification body content -->
+    <string name="pill_notification_body">Kindly take your pill</string>
+    <!-- Notification Title -->
+    <string name="pill_notification_title">PILL REMINDER</string>
+</resources>
