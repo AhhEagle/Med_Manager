@@ -1,11 +1,10 @@
-package com.oladimeji.medmanager.Utilities;
+package com.oladimeji.medmanager.utilities;
 
 import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
-import android.database.Cursor;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.content.ContextCompat;
 

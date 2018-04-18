@@ -1,69 +1,98 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="horizontal"
-    android:layout_marginTop="20dp"
-    android:layout_marginStart="20dp"
-    android:layout_marginEnd="20dp"
-    android:layout_marginBottom="20dp">
-
+    tools:context="com.oladimeji.medmanager.ProfileLabel">
 
     <LinearLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="vertical">
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/category_name"/>
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/category_description"/>
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/category_frequency"/>
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/category_start_date"/>
-
-    </LinearLayout>
-
-    <LinearLayout
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:layout_marginStart="20dp">
+        android:padding="@dimen/activity_margin">
+
+        <!-- Name text -->
+        <TextView
+            style="@style/CategoryStyle"
+            android:text="@string/category_name" />
+
+
+        <!-- Name field -->
+        <EditText
+            android:id="@+id/label_profile_name"
+            style="@style/EditorFieldStyle"
+            android:hint="@string/hint_profile_name"
+            android:inputType="textPersonName" />
+
+
+        <!-- Home address text -->
+        <TextView
+            style="@style/CategoryStyle"
+            android:text="@string/profile_home" />
+
+
+        <!-- Home address field -->
+
+        <EditText
+            android:id="@+id/label_profile_home"
+            style="@style/EditorFieldStyle"
+            android:hint="@string/hint_profile_home"
+            android:inputType="text"
+            android:maxLines="1" />
+
+
+        <!-- Sex text -->
+        <TextView
+            style="@style/CategoryStyle"
+            android:text="@string/profile_sex" />
+
+        <!-- Sex field -->
+        <EditText
+            android:id="@+id/label_profile_sex"
+            style="@style/EditorFieldStyle"
+            android:hint="@string/hint_profile_sex"
+            android:inputType="text"
+            android:maxLength="7"
+            android:maxLines="1" />
+
+        <!-- Age Text-->
 
         <TextView
-            android:id="@+id/catalog_med_name"
+            style="@style/CategoryStyle"
+            android:text="@string/profile_age" />
+
+        <!-- Age Field-->
+
+        <EditText
+            android:id="@+id/label_profile_age"
+            style="@style/EditorFieldStyle"
+            android:hint="@string/hint_profile_age"
+            android:inputType="number"
+            android:maxLength="3"
+            android:maxLines="1" />
+
+        <!-- Phone no Text-->
+
+        <TextView
+            style="@style/CategoryStyle"
+            android:text="@string/profile_phone_no" />
+
+        <EditText
+            android:id="@+id/label_profile_phone"
+            style="@style/EditorFieldStyle"
+            android:hint="@string/hint_profile_phone"
+            android:inputType="phone"
+            android:maxLength="11"
+            android:maxLines="1" />
+
+        <Button
+            android:id="@+id/label_profile_save"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="fffffff"
-            android:textColor="#2B3D4D" />
-
-
-        <TextView
-            android:id="@+id/catalog_med_frequency"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
-
-        <TextView
-            android:id="@+id/catalog_med_start_date"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
-
-        <TextView
-            android:id="@+id/catalog_med_description"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="ffffffff" />
-
+            android:layout_gravity="end"
+            android:layout_marginTop="10dp"
+            android:background="@color/colorAccent"
+            android:text="@string/profile_save" />
     </LinearLayout>
 
-
-</LinearLayout>
+</ScrollView>

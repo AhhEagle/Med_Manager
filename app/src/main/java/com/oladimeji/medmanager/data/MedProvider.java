@@ -12,23 +12,37 @@ import android.support.annotation.Nullable;
 import android.util.Log;
 import android.widget.Toast;
 
+import com.oladimeji.medmanager.data.MedContract.ProfileEntry;
+
 /**
  * Created by Oladimeji on 4/5/2018.
  */
 
-public class MedProvider  extends ContentProvider{
+public class MedProvider extends ContentProvider {
 
-    /** Tag for the log messages*/
+    /**
+     * Tag for the log messages
+     */
     public static final String LOG_TAG = MedProvider.class.getSimpleName();
 
     /**
      * URI matcher code for the content URI for the med table
      */
     private static final int MED = 20;
+
+    /**
+     * URI matcher code for the content URI for the profile table
+     */
+    private static final int PROF = 200;
     /**
      * URI matcher code for the content URI for a single med in the med table
      */
     private static final int MED_ID = 21;
+
+    /**
+     * URI matcher code for the content URI for a user in the prof table
+     */
+    private static final int PROF_ID = 201;
 
     /**
      * UriMatcher object to match a content URI to a corresponding code.
@@ -39,17 +53,19 @@ public class MedProvider  extends ContentProvider{
     private static final UriMatcher sUriMatcher = buildUriMatcher();
 
     //Static Initiator, This is run the first time anything is called from this class.
-    public static UriMatcher buildUriMatcher(){
+    public static UriMatcher buildUriMatcher() {
         UriMatcher uriMatcher = new UriMatcher(UriMatcher.NO_MATCH);
         //The calls to addURI() go here, for all of the content URI patterns that the provider
         //should recognize. All paths added to the UriMatcher have a corresponding code to return.
         //when a match is found
 
         uriMatcher.addURI(MedContract.CONTENT_AUTHORITY, MedContract.PATH_MED, MED);
+        uriMatcher.addURI(MedContract.CONTENT_AUTHORITY, MedContract.PATH_PROF, PROF);
 
         //In this case, the # wildcard is used where "#" can be substituted for an integer.
         //for example "contents://com.oladimeji.medManager.meds/med/8" matches
         uriMatcher.addURI(MedContract.CONTENT_AUTHORITY, MedContract.PATH_MED + "/#", MED_ID);
+        uriMatcher.addURI(MedContract.CONTENT_AUTHORITY, MedContract.PATH_PROF + "/#", PROF_ID);
         return uriMatcher;
     }
 
@@ -70,7 +86,7 @@ public class MedProvider  extends ContentProvider{
 
 
     @Override
-    public Cursor query(Uri uri,  String[] projection,  String selection,  String[] selectionArgs, String sortOrder) {
+    public Cursor query(Uri uri, String[] projection, String selection, String[] selectionArgs, String sortOrder) {
 
         //Get readable database
         SQLiteDatabase database = mdbHelper.getReadableDatabase();
@@ -90,15 +106,30 @@ public class MedProvider  extends ContentProvider{
                 //the selection will be "_id" and the selection argument will be a
 
                 selection = MedContract.MedEntry._ID + "=?";
-                selectionArgs = new String[]{ String.valueOf(ContentUris.parseId(uri)) };
+                selectionArgs = new String[]{String.valueOf(ContentUris.parseId(uri))};
 
                 //This will perform a query on the meds table where thr _id equals # to return a
                 //Cursor containing that row of the table.
                 cursor = database.query(MedContract.MedEntry.TABLE_NAME, projection, selection, selectionArgs, null, null, sortOrder);
                 break;
+            case PROF:
+              cursor = database.query(ProfileEntry.TABLE_NAME_PROF, projection, selection, selectionArgs, null, null, sortOrder);
+              break;
+            case PROF_ID:
+                //for the PROF_ID code, extract out the ID from the URI
+                //the selection will be "_id" and the selection argument will be a
+
+                selection = ProfileEntry._ID1 + "=?";
+                selectionArgs = new String[]{String.valueOf(ContentUris.parseId(uri))};
+
+                //This will perform a query on the prof table where thr _id equals 1 to return a
+                //Cursor containing that row of the table.
+                cursor = database.query(ProfileEntry.TABLE_NAME_PROF, projection, selection,  selectionArgs, null, null, sortOrder);
+                break;
+
 
             default:
-                throw new IllegalArgumentException("cannot query unknown UI " + uri);
+                throw new IllegalArgumentException("cannot query unknown uri " + uri);
         }
         // Set notification URI on the Cursor,
         // so we know what content URI the Cursor was created for.
@@ -116,6 +147,10 @@ public class MedProvider  extends ContentProvider{
                 return MedContract.MedEntry.CONTENT_LIST_TYPE;
             case MED_ID:
                 return MedContract.MedEntry.CONTENT_ITEM_TYPE;
+            case PROF:
+                return ProfileEntry.CONTENT_LIST_TYPE1;
+            case PROF_ID:
+                return ProfileEntry.CONTENT_ITEM_TYPE1;
             default:
                 throw new IllegalStateException("Unknown URI " + uri + " with match " + match);
         }
@@ -128,6 +163,8 @@ public class MedProvider  extends ContentProvider{
         switch (match) {
             case MED:
                 return insertMed(uri, values);
+            case PROF:
+                return insertProf(uri, values);
             default:
                 throw new IllegalArgumentException("Insertion is not supported for " + uri);
         }
@@ -136,20 +173,20 @@ public class MedProvider  extends ContentProvider{
     //Insert a pill into the database with the given content values. Return the new content URI
     //for that specific row in the database.
 
-    private Uri insertMed(Uri uri, ContentValues values){
+    private Uri insertMed(Uri uri, ContentValues values) {
         //Check that the name is not null
         String name = values.getAsString(MedContract.MedEntry.COLUMN_MED_NAME);
-        if (name == null){
+        if (name == null) {
             throw new IllegalArgumentException("A valid Medicine name is required");
         }
         //Check that the description is provided and is not less than 0
         Integer description = values.getAsInteger(MedContract.MedEntry.COLUMN_MED_DESCRIPTION);
-        if (description != null && description < 1 ){
+        if (description != null && description < 1) {
             throw new IllegalArgumentException("Medicine description is required");
         }
         //Check that the frequency is provided and is not less than 1
         Integer frequency = values.getAsInteger(MedContract.MedEntry.COLUMN_MED_FREQUENCY);
-        if (frequency != null && frequency < 1 ){
+        if (frequency != null && frequency < 1) {
             throw new IllegalArgumentException("Medicine description is required");
         }
         // I do not need to check for start date and end date since its using a calender view
@@ -160,7 +197,7 @@ public class MedProvider  extends ContentProvider{
         //Insert the new pill with the given values
         long id = database.insert(MedContract.MedEntry.TABLE_NAME, null, values);
         // If the ID = -1, that means the insertion failed. An error message should be displayed
-        if (id == -1){
+        if (id == -1) {
             Log.e(LOG_TAG, "Failed to insert row for " + uri);
             return null;
         }
@@ -172,6 +209,56 @@ public class MedProvider  extends ContentProvider{
         // return the new URI with the ID  (of the newly inserted row) appended to the end of it
         return ContentUris.withAppendedId(uri, id);
     }
+
+    private Uri insertProf(Uri uri, ContentValues values) {
+        //Check that the name is not null
+        String name = values.getAsString(ProfileEntry.COLUMN_PROF_NAME);
+        if (name == null) {
+            throw new IllegalArgumentException("Your name is required");
+        }
+        //Check that the Home address is not null
+        String home = values.getAsString(ProfileEntry.COLUMN_PROF_ADDRESS);
+        if (home == null) {
+            throw new IllegalArgumentException("Your home address is required");
+        }
+        //Check that the Sex is not null
+        String sex = values.getAsString(ProfileEntry.COLUMN_PROF_SEX);
+        if (sex == null) {
+            throw new IllegalArgumentException("Your home address is required");
+        }
+        //Check that the Age is provided and is not less than 1
+        Integer age = values.getAsInteger(ProfileEntry.COLUMN_PROF_AGE);
+        if (age != null && age < 1) {
+            throw new IllegalArgumentException("Age is required");
+        }
+
+        //Check that the Phone no is not null
+        String phone = values.getAsString(ProfileEntry.COLUMN_PROF_ADDRESS);
+        if (phone == null) {
+            throw new IllegalArgumentException("Your home address is required");
+        }
+
+
+        //Get writable database
+        SQLiteDatabase database = mdbHelper.getWritableDatabase();
+
+        //Insert the user with the given values
+        long id = database.insert(ProfileEntry.TABLE_NAME_PROF, null, values);
+        // If the ID = -1, that means the insertion failed. An error message should be displayed
+        if (id == -1) {
+            Log.e(LOG_TAG, "Failed to insert row for " + uri);
+            return null;
+        }
+
+        //Notify all listeners that the data has changed for the med content URI
+        // uri: content://com.oladimeji.medmanager/meds
+        getContext().getContentResolver().notifyChange(uri, null);
+
+        // return the new URI with the ID  (of the newly inserted row) appended to the end of it
+        return ContentUris.withAppendedId(uri, id);
+
+    }
+
 
     @Override
     public int delete(Uri uri, String selection, String[] selectionArgs) {
@@ -190,7 +277,7 @@ public class MedProvider  extends ContentProvider{
             case MED_ID:
                 // Delete a single row given by the ID in the URI
                 selection = MedContract.MedEntry._ID + "=?";
-                selectionArgs = new String[] { String.valueOf(ContentUris.parseId(uri)) };
+                selectionArgs = new String[]{String.valueOf(ContentUris.parseId(uri))};
                 rowsDeleted = database.delete(MedContract.MedEntry.TABLE_NAME, selection, selectionArgs);
                 break;
             default:
@@ -220,33 +307,41 @@ public class MedProvider  extends ContentProvider{
                 selection = MedContract.MedEntry._ID + "=?";
                 selectionArgs = new String[]{String.valueOf(ContentUris.parseId(uri))};
                 return updateMed(uri, values, selection, selectionArgs);
+            case PROF_ID:
+                // For the PROF_ID code, extract out the ID from the URI,
+                // so we know which row to update. Selection will be "_id=?" and selection
+                // arguments will be a String array containing the actual ID.
+                selection = ProfileEntry._ID1 + "=?";
+                selectionArgs = new String[]{String.valueOf(ContentUris.parseId(uri))};
+                return updateProf(uri, values, selection, selectionArgs);
             default:
                 throw new IllegalArgumentException("Update is not supported for " + uri);
         }
     }
+
     /**
      * Update med in the database with the given content values. Apply the changes to the rows
      * specified in the selection and selection arguments (which could be 0 or 1 or more meds).
      * Return the number of rows that were successfully updated.
      */
-    private int updateMed(Uri uri, ContentValues values, String selection, String[] selectionArgs){
+    private int updateMed(Uri uri, ContentValues values, String selection, String[] selectionArgs) {
         //check that the name values is not null if the key is present and also do that for all other fields
-        if (values.containsKey(MedContract.MedEntry.COLUMN_MED_NAME)){
+        if (values.containsKey(MedContract.MedEntry.COLUMN_MED_NAME)) {
             String name = values.getAsString(MedContract.MedEntry.COLUMN_MED_NAME);
-            if (name == null){
+            if (name == null) {
                 throw new IllegalArgumentException("A valid Medicine name is required");
             }
         }
-        if (values.containsKey(MedContract.MedEntry.COLUMN_MED_DESCRIPTION)){
+        if (values.containsKey(MedContract.MedEntry.COLUMN_MED_DESCRIPTION)) {
             Integer description = values.getAsInteger(MedContract.MedEntry.COLUMN_MED_DESCRIPTION);
-            if (description != null && description < 1 ){
+            if (description != null && description < 1) {
                 throw new IllegalArgumentException("Medicine description is required");
             }
         }
 
-        if (values.containsKey(MedContract.MedEntry.COLUMN_MED_FREQUENCY)){
+        if (values.containsKey(MedContract.MedEntry.COLUMN_MED_FREQUENCY)) {
             Integer frequency = values.getAsInteger(MedContract.MedEntry.COLUMN_MED_FREQUENCY);
-            if (frequency != null && frequency < 1 ){
+            if (frequency != null && frequency < 1) {
                 throw new IllegalArgumentException("Medicine description is required");
             }
 
@@ -254,7 +349,7 @@ public class MedProvider  extends ContentProvider{
         //Start date and end date are calender values picked from datepicker
 
         //If there are no values to update, then don't try to update the database
-        if (values.size() == 0){
+        if (values.size() == 0) {
             return 0;
         }
 
@@ -272,5 +367,66 @@ public class MedProvider  extends ContentProvider{
 
         // Return the number of rows updated
         return rowsUpdated;
+    }
+
+    private int updateProf(Uri uri, ContentValues values, String selection, String[] selectionArgs) {
+        //check that the name values is not null if the key is present and also do that for all other fields
+        if (values.containsKey(ProfileEntry.COLUMN_PROF_NAME)) {
+            String name = values.getAsString(ProfileEntry.COLUMN_PROF_NAME);
+            if (name == null) {
+                throw new IllegalArgumentException("A valid User name is required");
+            }
+        }
+
+        if (values.containsKey(ProfileEntry.COLUMN_PROF_ADDRESS)) {
+            String name = values.getAsString(ProfileEntry.COLUMN_PROF_ADDRESS);
+            if (name == null) {
+                throw new IllegalArgumentException("A valid home address is required");
+            }
+        }
+        if (values.containsKey(ProfileEntry.COLUMN_PROF_SEX)) {
+            String sex = values.getAsString(ProfileEntry.COLUMN_PROF_SEX);
+            if (sex == null) {
+                throw new IllegalArgumentException("A valid sex is required");
+            }
+        }
+
+
+
+        if (values.containsKey(ProfileEntry.COLUMN_PROF_AGE)) {
+            Integer age = values.getAsInteger(ProfileEntry.COLUMN_PROF_AGE);
+            if (age != null && age < 1) {
+                throw new IllegalArgumentException("A valid age is required");
+            }
+
+        }
+        if (values.containsKey(ProfileEntry.COLUMN_PROF_PHONE)) {
+            String name = values.getAsString(ProfileEntry.COLUMN_PROF_PHONE);
+            if (name == null) {
+                throw new IllegalArgumentException("A valid Phone no is required");
+            }
+        }
+
+
+        //If there are no values to update, then don't try to update the database
+        if (values.size() == 0) {
+            return 0;
+        }
+
+        //Otherwise, get a writeable database to update the data
+        SQLiteDatabase database = mdbHelper.getWritableDatabase();
+
+        // Perform the update on the database and get the number of rows affected
+        int rowsUpdated = database.update(ProfileEntry.TABLE_NAME_PROF, values, selection, selectionArgs);
+
+        // If 1 or more rows were updated, then notify all listeners that the data at the
+        // given URI has changed
+        if (rowsUpdated != 0) {
+            getContext().getContentResolver().notifyChange(uri, null);
+        }
+
+        // Return the number of rows updated
+        return rowsUpdated;
+
     }
 }

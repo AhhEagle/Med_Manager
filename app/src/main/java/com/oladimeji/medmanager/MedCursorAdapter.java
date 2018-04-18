@@ -1,7 +1,11 @@
 package com.oladimeji.medmanager;
 
+import android.content.ContentResolver;
+import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
+import android.net.Uri;
+import android.provider.CalendarContract;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -75,6 +79,8 @@ public class MedCursorAdapter  extends CursorAdapter implements Filterable {
         descriptionView.setText(descriptionString);
         frequencyView.setText(frequencyString);
         startdateView.setText(startdate);
+
+
 
 
     }

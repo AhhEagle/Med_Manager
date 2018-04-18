@@ -41,4 +41,50 @@
     <string name="pill_notification_body">Kindly take your pill</string>
     <!-- Notification Title -->
     <string name="pill_notification_title">PILL REMINDER</string>
+    <!-- Profile Label -->
+    <string name="profile_label">PROFILE</string>
+    <!-- Profile age-->
+    <string name="profile_age">Age</string>
+    <!-- Profile age hint-->
+    <string name="hint_profile_age">How old are you</string>
+    <!-- Profile Phone no -->
+    <string name="profile_phone_no">Phone No</string>
+    <!-- Profile Phone no hint -->
+    <string name="hint_profile_phone">08133994885</string>
+    <!-- Profile Home address  -->
+    <string name="profile_home">Home Address</string>
+    <!-- Profile Home address hint -->
+    <string name="hint_profile_home">Where do you live</string>
+    <!-- Profile Name-->
+    <string name="profile_name">Name</string>
+    <!-- Profile name hint -->
+    <string name="hint_profile_name">What is your name</string>
+    <!-- Profile Sex -->
+    <string name="profile_sex">Sex</string>
+    <!-- Profile Sex hint -->
+    <string name="hint_profile_sex">Male</string>
+    <!-- Profile Save Button -->
+    <string name="profile_save">SAVE</string>
+    <!-- Profile header for a new user -->
+    <string name="label_profile_title_new_profile">NEW PROFILE</string>
+    <!-- Profile header for a editng an existing user -->
+    <string name="label_profile_title_edit_profile">EDIT PROFILE</string>
+    <!-- Error message if profile saving failed -->
+    <string name="label_insert_profile_failed"> Failed to save </string>
+    <!-- Toast message if profile saving is successful -->
+    <string name="label_insert_profile_successful"> Saved</string>
+    <!-- Toast message to show that profile update failed -->
+    <string name="label_update_profile_failed">Unable to Update Profile</string>
+    <!-- Toast message to show that profile update was successful -->
+    <string name="label_update_profile_successful">Profile Updated</string>
+    <!-- Users profile name -->
+    <string name="profiled_name">NAME</string>
+    <!-- Users profile home address -->
+    <string name="profiled_home_address">HOME ADDRESS</string>
+    <!-- Users profile sex -->
+    <string name="profiled_sex">SEX</string>
+    <!-- Users profile Age -->
+    <string name="profiled_age">AGE</string>
+    <!-- Users profile Phone no -->
+    <string name="profiled_phone_no">PHONE NUMBER</string>
 </resources>

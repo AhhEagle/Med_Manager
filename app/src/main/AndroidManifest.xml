@@ -2,7 +2,11 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     package="com.oladimeji.medmanager">
-    <uses-permission android:name="android.permission.VIBRATE"/>
+
+    <uses-permission android:name="android.permission.VIBRATE" />
+    <uses-permission android:name="android.permission.BOOT_COMPLETED"/>
+    <uses-permission android:name="android.permission.READ_CALENDAR"/>
+    <uses-permission android:name="android.permission.WRITE_CALENDAR"/>
 
     <application
         android:allowBackup="true"
@@ -11,8 +15,8 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-
-        <activity android:name=".CatalogActivity"
+        <activity
+            android:name=".CatalogActivity"
             android:launchMode="singleTop">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -23,29 +27,42 @@
         <activity
             android:name=".EditActivity"
             android:label="@string/editor_activity_title_new_med"
-            android:theme="@style/EditorTheme"
-            android:parentActivityName=".CatalogActivity" >
+            android:parentActivityName=".CatalogActivity"
+            android:theme="@style/EditorTheme">
+
             <!-- Parent activity meta-data to support 4.0 and lower -->
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".CatalogActivity" />
         </activity>
+        <activity
+            android:name=".ProfileLabel"
+            android:label="@string/profile_label" >
         <meta-data
-            tools:replace="android:value"
+            android:name="android.support.PARENT_ACTIVITY"
+            android:value=".CatalogActivity" />
+        </activity>
+
+        <meta-data
             android:name="android.support.VERSION"
-            android:value="26.1.0" />
+            android:value="26.1.0"
+            tools:replace="android:value" />
+
         <provider
+            android:name="com.oladimeji.medmanager.data.MedProvider"
             android:authorities="com.oladimeji.medmanager"
-            android:name=".data.MedProvider"
-            android:exported="false"/>
-        <service android:name=".sync.PillReminderService"
-            android:exported="false"/>
-        <service android:name=".Utilities.PillReminderFirebaseJobService"
-            android:exported="false">
+            android:exported="true" />
+
+        <service
+            android:name=".sync.PillReminderService"
+            android:exported="false" />
+
+        <activity android:name=".ProfiledActivity"/>
+        <receiver android:name=".utilities.AlarmBroadcastReceiver" android:enabled="false">
             <intent-filter>
-                <action android:name="com.firebase.jobdispatcher.ACTION_EXECUTE"/>
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
             </intent-filter>
-        </service>
+        </receiver>
     </application>
 
 </manifest>

@@ -3,13 +3,17 @@ package com.oladimeji.medmanager;
 import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.app.LoaderManager;
+import android.content.ContentResolver;
 import android.content.ContentValues;
 import android.content.CursorLoader;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.Loader;
+import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.net.Uri;
+import android.provider.CalendarContract;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.NavUtils;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -28,7 +32,7 @@ import com.oladimeji.medmanager.data.MedContract;
 
 import java.util.Calendar;
 
-public class EditActivity extends AppCompatActivity  implements LoaderManager.LoaderCallbacks<Cursor>{
+public class EditActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<Cursor> {
 
     /** Identifier for the pill data loader */
     private static final int EXISTING_PET_LOADER = 0;
@@ -59,7 +63,8 @@ public class EditActivity extends AppCompatActivity  implements LoaderManager.Lo
     private EditText mStartdateEditText;
     private EditText mEnddateEditText;
     DatePickerDialog datePickerDialog;
-    
+    Cursor mCursor;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -92,7 +97,7 @@ public class EditActivity extends AppCompatActivity  implements LoaderManager.Lo
         mNameEditText = findViewById(R.id.edit_med_name);
         mDescriptionEditText = findViewById(R.id.edit_med_description);
         mFrequencyEditText = findViewById(R.id.edit_med_frequency);
-        mStartdateEditText =  findViewById(R.id.edit_start_date);
+        mStartdateEditText = findViewById(R.id.edit_start_date);
         mEnddateEditText = findViewById(R.id.edit_end_date);
 
         // Setup OnTouchListeners on all the input fields, so we can determine if the user
@@ -105,33 +110,50 @@ public class EditActivity extends AppCompatActivity  implements LoaderManager.Lo
         mEnddateEditText.setOnTouchListener(mTouchListener);
 
         //perform click event on edit text
-        View.OnClickListener onClickListener = new View.OnClickListener() {
+        mStartdateEditText.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                    //calender class instance to get current date, month and year
-                    final Calendar c = Calendar.getInstance();
-                    int mYear = c.get(Calendar.YEAR);  // year selected
-                    int mMonth = c.get(Calendar.MONTH); // month selected
-                    int mDay = c.get(Calendar.DAY_OF_MONTH); //day selected
-                    //date picker dialog
-                    datePickerDialog = new DatePickerDialog(EditActivity.this, new DatePickerDialog.OnDateSetListener() {
-                        @Override
-                        public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
-                            //set day of month, month and year value in the edit text
-                            mStartdateEditText.setText((month + 1) + "/" + dayOfMonth + "/" + year);
-                            mStartdateEditText.setFocusable(false);
-                        }
-                    }, mYear, mMonth, mDay);
-                    datePickerDialog.show();
-            }
-        };
-        //on click listener for start and end date selection
-        mStartdateEditText.setOnClickListener(onClickListener);
+                //calender class instance to get current date, month and year
+                final Calendar c = Calendar.getInstance();
+                int mYear = c.get(Calendar.YEAR);  // year selected
+                int mMonth = c.get(Calendar.MONTH); // month selected
+                int mDay = c.get(Calendar.DAY_OF_MONTH); //day selected
+                //date picker dialog
+                datePickerDialog = new DatePickerDialog(EditActivity.this, new DatePickerDialog.OnDateSetListener() {
+                    @Override
+                    public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
+                        //set day of month, month and year value in the edit text
+                        mStartdateEditText.setText((month + 1) + "/" + dayOfMonth + "/" + year);
+                    }
+                }, mYear, mMonth, mDay);
+                datePickerDialog.show();
 
-        mEnddateEditText.setOnClickListener(onClickListener);
+            }
+        });
+        mEnddateEditText.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //calender class instance to get current date, month and year
+                final Calendar c1 = Calendar.getInstance();
+                int mYear1 = c1.get(Calendar.YEAR);  // year selected
+                int mMonth1 = c1.get(Calendar.MONTH); // month selected
+                int mDay1 = c1.get(Calendar.DAY_OF_MONTH); //day selected
+                //date picker dialog
+                datePickerDialog = new DatePickerDialog(EditActivity.this, new DatePickerDialog.OnDateSetListener() {
+                    @Override
+                    public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
+                        //set day of month, month and year value in the edit text
+                        mEnddateEditText.setText((month + 1) + "/" + dayOfMonth + "/" + year);
+                    }
+                }, mYear1, mMonth1, mDay1);
+                datePickerDialog.show();
+            }
+        });
+
     }
 
-    private void saveMed(){
+
+    private void saveMed() {
         // Read from input fields
         // Use trim to eliminate leading or trailing white space
         String nameString = mNameEditText.getText().toString().trim();
@@ -144,7 +166,7 @@ public class EditActivity extends AppCompatActivity  implements LoaderManager.Lo
         // and check if all the fields in the editor are blank
 
         if (mCurrentMedUri == null && TextUtils.isEmpty(nameString) && TextUtils.isEmpty(descriptionString)
-                && TextUtils.isEmpty(frequencyString) && TextUtils.isEmpty(startdateString) && TextUtils.isEmpty(enddateString)){
+                && TextUtils.isEmpty(frequencyString) && TextUtils.isEmpty(startdateString) && TextUtils.isEmpty(enddateString)) {
             return;
         }
         // Create a ContentValues object where column names are the keys,
@@ -159,13 +181,13 @@ public class EditActivity extends AppCompatActivity  implements LoaderManager.Lo
 
         //Determine if this is a new or existing pill by checking if mCurrentMedUri ia null or not
 
-        if (mCurrentMedUri == null){
+        if (mCurrentMedUri == null) {
             //This is a New Pill, so insert a new pill into the provider,
             //return the content URI for the new pill.
             Uri newUri = getContentResolver().insert(MedContract.MedEntry.CONTENT_URI, values);
 
-            if (newUri == null){
-                //show a toast message that an error occured
+            if (newUri == null) {
+                //show a toast message that an error occurred
                 Toast.makeText(this, getString(R.string.edit_insert_pill_failed), Toast.LENGTH_SHORT).show();
             } else {
                 //show a toast message that it was saved successfully
@@ -190,6 +212,38 @@ public class EditActivity extends AppCompatActivity  implements LoaderManager.Lo
             }
         }
 
+        /*I want to insert into the calender contentprovider so that it can handle the notification for me*/
+        int idIndex = mCursor.getColumnIndex(MedContract.MedEntry._ID);
+        final int Id = mCursor.getInt(idIndex);
+        //My frequency is converted to hour base for the usage in the calendar
+     //   int frequencyrate = Integer.parseInt(frequencyString);
+
+        ContentResolver contentResolver = this.getContentResolver();
+        ContentValues contentValues = new ContentValues();
+        contentValues.put(CalendarContract.Events.TITLE, nameString);
+        contentValues.put(CalendarContract.Events.DESCRIPTION, descriptionString);
+        contentValues.put(CalendarContract.Events.DTSTART, startdateString);
+        contentValues.put(CalendarContract.Events.DTEND, enddateString);
+        contentValues.put(CalendarContract.Events.CALENDAR_ID, Id);
+        contentValues.put(CalendarContract.Events.EVENT_TIMEZONE, "Nigeria/Lagos");
+
+        if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.WRITE_CALENDAR) != PackageManager.PERMISSION_GRANTED) {
+
+            return;
+        }
+        Uri uri = contentResolver.insert(CalendarContract.Events.CONTENT_URI, contentValues);
+        if(uri == null){
+            Toast.makeText(this, "unable to save the drug into your calendar for reminder", Toast.LENGTH_SHORT).show();
+        }else{
+            Toast.makeText(this, "You will be reminded when to take the drug", Toast.LENGTH_SHORT).show();
+        }
+
+        //Setting a reminder for each drug that as being added
+        //This reminder is fired 1 minute before the event
+        contentValues.put(CalendarContract.Reminders.MINUTES, 1);
+        values.put(CalendarContract.Reminders.EVENT_ID, Id);
+        values.put(CalendarContract.Reminders.METHOD, CalendarContract.Reminders.METHOD_ALERT);
+        Uri reminderuri = contentResolver.insert(CalendarContract.Reminders.CONTENT_URI, values);
     }
 
 

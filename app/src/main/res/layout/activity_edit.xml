@@ -1,12 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?><!-- Layout for the editor -->
 <ScrollView android:layout_height="match_parent" android:layout_width="match_parent"
     xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     tools:context="com.oladimeji.medmanager.EditActivity">
 <LinearLayout
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_height="wrap_content"
     android:orientation="vertical"
     android:padding="@dimen/activity_margin"
     >
@@ -82,6 +81,7 @@
     <EditText
         android:id="@+id/edit_start_date"
         style="@style/EditorFieldStyle"
+        android:inputType="date"
         android:hint="@string/hint_med_start_date" />
     <TextView
         style="@style/CategoryStyle"
@@ -89,6 +89,7 @@
     <EditText
         android:id="@+id/edit_end_date"
         style="@style/EditorFieldStyle"
+        android:inputType="date"
         android:hint="@string/hint_med_end_date" />
 
 </LinearLayout>

@@ -9,6 +9,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
 import com.oladimeji.medmanager.data.MedContract.MedEntry;
+import com.oladimeji.medmanager.data.MedContract.ProfileEntry;
 
 
 /**
@@ -20,6 +21,7 @@ public class MedDbHelper extends SQLiteOpenHelper{
 
     /** Name of the database file */
     private static final String DATABASE_NAME = "medicine.db";
+
 
     /**
      * Database version. If you change the database schema, you must increment the database version.
@@ -53,6 +55,16 @@ public class MedDbHelper extends SQLiteOpenHelper{
         //Execute the SQL statement
         db.execSQL(SQL_CREATE_MED_TABLE);
 
+        String SQL_CREATE_PROF_TABLE =  "CREATE TABLE " + ProfileEntry.TABLE_NAME_PROF + " ("
+                + ProfileEntry._ID1 + " INTEGER PRIMARY KEY AUTOINCREMENT, "
+                + ProfileEntry.COLUMN_PROF_NAME + " TEXT NOT NULL, "
+                + ProfileEntry.COLUMN_PROF_ADDRESS + " TEXT NOT NULL, "
+                + ProfileEntry.COLUMN_PROF_SEX + " TEXT NOT NULL, "
+                + ProfileEntry.COLUMN_PROF_AGE  + " INTEGER NOT NULL, "
+                + ProfileEntry.COLUMN_PROF_PHONE  + " TEXT NOT NULL);";
+        db.execSQL(SQL_CREATE_PROF_TABLE);
+
+
     }
 
 
@@ -60,6 +72,7 @@ public class MedDbHelper extends SQLiteOpenHelper{
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
         //called when the database is upgraded
         db.execSQL("DROP TABLE IF EXISTS " + MedEntry.TABLE_NAME);
+        db.execSQL("DROP TABLE IF EXISTS " + ProfileEntry.TABLE_NAME_PROF);
         onCreate(db);
     }
 }

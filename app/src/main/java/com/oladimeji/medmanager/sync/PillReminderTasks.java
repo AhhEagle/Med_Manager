@@ -1,10 +1,9 @@
 package com.oladimeji.medmanager.sync;
 
 import android.content.Context;
-import android.content.Intent;
 import android.widget.Toast;
 
-import com.oladimeji.medmanager.Utilities.NotificationUtils;
+import com.oladimeji.medmanager.utilities.NotificationUtils;
 
 /**
  * Created by Oladimeji on 4/6/2018.

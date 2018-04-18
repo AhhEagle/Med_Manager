@@ -22,16 +22,20 @@ public final class MedContract {
      */
     public static final String CONTENT_AUTHORITY = "com.oladimeji.medmanager";
 
+
     /**
      * Use CONTENT_AUTHORITY to create the base of all URI's which apps will use to contact
      * the content provider.
      */
     public static final Uri BASE_CONTENT_URI = Uri.parse("content://" + CONTENT_AUTHORITY);
 
-    //Possible path (appended to base content URI for possible URI's)
+    //Possible path  for the pills (appended to base content URI for possible URI's)
 
 
     public static final String PATH_MED = "med";
+
+    //possible path for the profile
+    public static final String PATH_PROF = "prof";
 
 
     //Inner class that defines constant values for the med database table.
@@ -100,6 +104,71 @@ public final class MedContract {
          * Type: TEXT
          */
         public final static String COLUMN_MED_END_DATE = "enddate";
+
+    }
+    public static final class ProfileEntry implements BaseColumns{
+
+        /**The content URI to access the profile data in the provider*/
+        public static final Uri CONTENT_URI1 = Uri.withAppendedPath(BASE_CONTENT_URI, PATH_PROF);
+
+        /**
+         * The MIME type of the {@link #CONTENT_URI1} for a list of pills. */
+
+        public static final String CONTENT_LIST_TYPE1 =
+                ContentResolver.CURSOR_DIR_BASE_TYPE + "/" + CONTENT_AUTHORITY + "/" + PATH_PROF;
+
+        /**
+         * The MIME type of the {@link #CONTENT_URI1} for the user.
+         */
+        public static final String CONTENT_ITEM_TYPE1 =
+                ContentResolver.CURSOR_ITEM_BASE_TYPE + "/" + CONTENT_AUTHORITY + "/" + PATH_PROF;
+
+
+        /** Name of database table for user profile */
+        public final static String TABLE_NAME_PROF = "prof";
+
+
+        /**
+         * Unique ID number for the user (only for use in the database table).
+         *
+         * Type: INTEGER
+         */
+        public final static String _ID1 = BaseColumns._ID;
+
+        /**
+         * Name of the app user.
+         *
+         * Type: TEXT
+         */
+        public final static String COLUMN_PROF_NAME ="surname";
+
+        /**
+         * Home address of the app user.
+         *
+         * Type: TEXT
+         */
+        public final static String COLUMN_PROF_ADDRESS = "address";
+
+        /**
+         * Sex of the user.
+         *
+         * Type: TEXT
+         */
+        public final static String COLUMN_PROF_SEX= "sex";
+
+        /**
+         * User Age.
+         *
+         * Type: Integer
+         */
+        public final static String COLUMN_PROF_AGE = "age";
+
+        /**
+         * User Phone no.
+         *
+         * Type: TEXT
+         */
+        public final static String COLUMN_PROF_PHONE = "phone";
 
     }
 }

@@ -1,6 +1,8 @@
 package com.oladimeji.medmanager;
 
+import android.app.AlarmManager;
 import android.app.LoaderManager;
+import android.app.PendingIntent;
 import android.app.SearchManager;
 import android.content.ContentUris;
 import android.content.Context;
@@ -13,10 +15,6 @@ import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.helper.ItemTouchHelper;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -28,10 +26,13 @@ import android.widget.Toast;
 import com.firebase.ui.auth.AuthUI;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.oladimeji.medmanager.utilities.AlarmBroadcastReceiver;
 import com.oladimeji.medmanager.data.MedContract;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import com.oladimeji.medmanager.MedCursorAdapter;
 
 public class CatalogActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<Cursor> {
 
@@ -41,6 +42,7 @@ public class CatalogActivity extends AppCompatActivity implements LoaderManager.
     private static final int PILL_LOADER = 0;
 
     private static final int RC_SIGN_IN = 123;
+    private static final int PENDING_INTENT_REQUEST_CODE = 2;
 
     /**
      * Adapter for the recyclerView
@@ -63,6 +65,30 @@ public class CatalogActivity extends AppCompatActivity implements LoaderManager.
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_catalog);
+
+        Boolean isFirstRun = getSharedPreferences("PREFERENCE", MODE_PRIVATE)
+                .getBoolean("isFirstRun", true);
+
+        if (isFirstRun) {
+            //show start activity
+
+            startActivity(new Intent(CatalogActivity.this, ProfileLabel.class));
+        }
+        getSharedPreferences("PREFERENCE", MODE_PRIVATE).edit()
+                .putBoolean("isFirstRun", false).apply();
+
+       /* long currentTime = System.currentTimeMillis();
+        long alarmTime = ;
+
+        AlarmManager alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
+        //intent targeted at launching a broadcast receiver
+        Intent alarmIntent = new Intent(this, AlarmBroadcastReceiver.class);
+        //Pendingintent allows Alarm manager to work even when my app is not running
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(this, PENDING_INTENT_REQUEST_CODE, alarmIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+        //set a repeating alarm
+        alarmManager.setRepeating(AlarmManager.ELAPSED_REALTIME_WAKEUP, triggertime, pendingIntent); */
+
+
         //Get firebase instance
         mFirebaseAuth = FirebaseAuth.getInstance();
 
@@ -193,6 +219,9 @@ public class CatalogActivity extends AppCompatActivity implements LoaderManager.
             case R.id.action_sign_out:
                 AuthUI.getInstance().signOut(this);
                 return true;
+            case R.id.action_profile:
+                Intent intent = new Intent(this, ProfiledActivity.class);
+                startActivity(intent);
             default:
                 return super.onOptionsItemSelected(item);
 
