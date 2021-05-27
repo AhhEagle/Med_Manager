@@ -8,3 +8,10 @@ To go through the code, you will need an android studio fully setup ater which y
 ### Installing
 
 To test on your phone, you can extract an apk file or use an emulator to do so.
+
+### Dependencies
+Some android studio dependencies were used:
+- Material Design
+- Constraint
+etc
+
